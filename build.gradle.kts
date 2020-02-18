@@ -8,19 +8,26 @@ plugins {
 group = "io.github.aananko.logisim"
 version = "0.1-SNAPSHOT"
 
+val logisimVersion = "2.7.1"
+val logisimJar = "logisim/logisim-generic-${logisimVersion}.jar"
+val logisimUrl = "https://sourceforge.net/projects/circuit/files/${
+        logisimVersion.replaceAfterLast('.', "x")
+    }/${logisimVersion}/logisim-generic-${logisimVersion}.jar/download"
+
 repositories {
     mavenCentral()
 }
 
-tasks.register<Download>("downloadLogisim") {
-    from("https://sourceforge.net/projects/circuit/files/2.7.x/2.7.1/logisim-generic-2.7.1.jar/download")
-    to("logisim/logisim-generic-2.7.1.jar")
+val downloadLogisim by tasks.register<Download>("downloadLogisim") {
+    from(logisimUrl)
+    to(logisimJar)
 }
-tasks.named("build") { dependsOn("downloadLogisim") }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    compile(files("logisim/logisim-generic-2.7.1.jar"))
+    implementation(files(logisimJar) {
+        builtBy(downloadLogisim)
+    })
 }
 
 tasks {
