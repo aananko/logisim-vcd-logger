@@ -47,10 +47,7 @@ tasks {
             )
         }
     }
-//    register<JavaExec>("runLogisim") {
-//        classpath = files(logisimJar)
-//    }
-    register<Exec>("runLogisim") {
-        commandLine("java", "-jar", logisimJar)
+    register<JavaExec>("runLogisim") {
+        classpath = files(logisimJar)
     }
 }
