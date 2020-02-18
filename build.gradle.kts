@@ -37,4 +37,14 @@ tasks {
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
+    jar {
+        from("src") {
+            into("src")
+        }
+        manifest {
+            attributes(
+                "Library-Class" to "io.github.aananko.logisim.vcdlogger.Components"
+            )
+        }
+    }
 }
