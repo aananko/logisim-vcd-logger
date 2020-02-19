@@ -5,7 +5,7 @@ import com.cburch.logisim.util.LocaleListener
 import java.util.*
 
 object Strings {
-    private const val resourceBundleName = "testBundle"
+    private const val resourceBundleName = "resources/localization"
     private val defaultBundle: ResourceBundle = ResourceBundle.getBundle(resourceBundleName, Locale("en"))
     private var bundle = getBundle()
     private val localeListener = LocaleListener { bundle = getBundle() }
