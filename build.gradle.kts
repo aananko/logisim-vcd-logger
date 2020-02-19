@@ -51,7 +51,11 @@ tasks {
             )
         }
     }
-    register<JavaExec>("runLogisim") {
-        classpath = files(logisimJar)
+
+    for(taskName in listOf("runLogisim", "buildAndRunLogisim")) {
+        register<JavaExec>(taskName) {
+            classpath = files(logisimJar)
+            if (taskName.startsWith("build")) dependsOn(build)
+        }
     }
 }
