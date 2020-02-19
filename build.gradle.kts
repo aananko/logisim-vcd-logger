@@ -41,6 +41,10 @@ tasks {
         from("src") {
             into("src")
         }
+        from(configurations.implementationDependenciesMetadata.get()
+            .filter { it.name.startsWith("kotlin-")}
+            .map { zipTree(it) }
+        )
         manifest {
             attributes(
                 "Library-Class" to "io.github.aananko.logisim.vcdlogger.Components"
