@@ -55,6 +55,7 @@ tasks {
     for(taskName in listOf("runLogisim", "buildAndRunLogisim")) {
         register<JavaExec>(taskName) {
             classpath = files(logisimJar)
+            args("src/test/circ/instantiate.circ")
             if (taskName.startsWith("build")) dependsOn(build)
         }
     }
