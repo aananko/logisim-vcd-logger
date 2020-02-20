@@ -9,7 +9,7 @@ group = "io.github.aananko.logisim"
 version = "0.1-SNAPSHOT"
 
 val logisimVersion = "2.7.1"
-val logisimJar = "${buildDir}/logisim/logisim-generic-${logisimVersion}.jar"
+val logisimJar = File("${buildDir}/logisim/logisim-generic-${logisimVersion}.jar")
 val logisimUrl = "https://sourceforge.net/projects/circuit/files/${
         logisimVersion.replaceAfterLast('.', "x")
     }/${logisimVersion}/logisim-generic-${logisimVersion}.jar/download"
@@ -18,7 +18,26 @@ repositories {
     mavenCentral()
 }
 
+// The downloadLogisim task checks if logisim jar have changed at the remote server every build.
+// To avoid this, we need to disable the task if logisimUrl have not changed.
+// But Download class overrides its outputs.upToDateWhen to true
+// and hence we need a separate task for the check.
+val checkIfLogisimUrlHaveChanged by tasks.register("checkIfLogisimUrlHaveChanged") {
+    inputs.property("logisimUrl", logisimUrl)
+    // every task needs some output, or it might be disabled by gradle
+    val outputFileName = "${buildDir}/${this.name}_dummy_output"
+    outputs.files(outputFileName)
+    doLast {
+        File(outputFileName).writeText("")
+    }
+}
+
 val downloadLogisim by tasks.register<Download>("downloadLogisim") {
+    dependsOn(checkIfLogisimUrlHaveChanged)
+    onlyIf{
+        !checkIfLogisimUrlHaveChanged.state.upToDate
+        || !logisimJar.exists()
+    }
     from(logisimUrl)
     to(logisimJar)
 }
